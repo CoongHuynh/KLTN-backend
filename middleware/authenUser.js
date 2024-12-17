@@ -19,8 +19,7 @@ exports.authentication = async (req, res, next) => {
     }
     // Thêm thông tin người dùng vào req
     req.user = user;
-    console.log("Authenticated user in middleware: ", req.user);
-    // Tiếp tục xử lý yêu cầu
+
     next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {

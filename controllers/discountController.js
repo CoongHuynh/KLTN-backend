@@ -9,7 +9,7 @@ exports.applyBulkDiscount = async (req, res) => {
     const products = await Product.find({});
 
     for (let product of products) {
-      if (!product.discount || product.discount < discount) {
+      if (!product.discount || product.discount <= discount) {
         await Product.findByIdAndUpdate(
           product._id,
           {

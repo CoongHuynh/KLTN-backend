@@ -14,7 +14,7 @@ const orderSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ["processing", "shipped", "cancelled", "awaiting_payment"],
-      default: "processing",
+      default: "awaiting_payment",
     },
     shipping_address: {
       type: String,
@@ -28,7 +28,6 @@ const orderSchema = new mongoose.Schema(
     method: {
       type: String,
       enum: ["cod", "paypal", "bank_transfer"],
-      required: true,
     },
 
     items: [

@@ -72,25 +72,3 @@ exports.deleteReviewById = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-// Cập nhật số lượng review cho tất cả sản phẩm
-exports.updateNumberOfReviewsForAllProducts = async (req, res) => {
-  try {
-    const products = await Product.find();
-
-    for (const product of products) {
-      const reviewCount = await Review.countDocuments({
-        product_id: product._id,
-      });
-      await Product.findByIdAndUpdate(product._id, {
-        numberOfReviews: reviewCount,
-      });
-    }
-
-    res
-      .status(200)
-      .json({ message: "Number of reviews updated for all products" });
-  } catch (error) {
-    console.error("Error updating number of reviews for all products:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-};
