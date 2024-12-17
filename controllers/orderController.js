@@ -28,6 +28,10 @@ const createOrder = async (req, res) => {
         quantity: item.quantity,
         price: product.price,
       });
+
+      // Cập nhật số lượng sản phẩm trong bảng Product
+      product.stock -= item.quantity;
+      await product.save();
     }
 
     // Tạo đơn hàng mới
@@ -42,7 +46,6 @@ const createOrder = async (req, res) => {
     const savedOrder = await newOrder.save();
 
     // Tạo các OrderItem tương ứng
-    // Tạo các OrderItem tương ứng
     for (const orderItem of orderItems) {
       const newOrderItem = new OrderItem({
         order_id: savedOrder._id,
@@ -52,6 +55,16 @@ const createOrder = async (req, res) => {
       });
       await newOrderItem.save();
     }
+
+    // Xóa các sản phẩm đã tạo đơn hàng khỏi giỏ hàng
+    await Cart.updateOne(
+      { user_id: user_id },
+      {
+        $pull: {
+          items: { product_id: { $in: items.map((item) => item.product_id) } },
+        },
+      }
+    );
 
     res.status(201).json(savedOrder);
   } catch (error) {

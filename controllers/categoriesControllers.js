@@ -60,9 +60,12 @@ const updateCategoryById = async (req, res) => {
     const { id } = req.params;
     const { name, description, brands } = req.body;
 
+    // Ensure brands is an array of IDs
+    const updatedBrands = Array.isArray(brands) ? brands : [];
+
     const category = await Category.findByIdAndUpdate(
       id,
-      { name, description, brands },
+      { name, description, brands: updatedBrands },
       { new: true, runValidators: true }
     );
 

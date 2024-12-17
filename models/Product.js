@@ -45,7 +45,8 @@ const productSchema = new mongoose.Schema(
       type: Date,
     },
     brand: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Brand",
     },
     views: {
       type: Number,

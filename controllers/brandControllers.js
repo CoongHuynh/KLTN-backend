@@ -32,7 +32,7 @@ const getAllBrands = async (req, res) => {
   try {
     const brands = await Brand.find().populate({
       path: "categories",
-      select: "-brands", // Loại bỏ trường brands khi populate categories
+      select: "_id name",
     });
     res.status(200).json(brands);
   } catch (error) {
@@ -40,15 +40,30 @@ const getAllBrands = async (req, res) => {
   }
 };
 
-// Controller để xóa brand theo ID
 const deleteBrandById = async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Kiểm tra xem có sản phẩm nào thuộc brand này không
+    const products = await Product.find({ brand: id });
+
+    if (products.length > 0) {
+      const productIds = products.map((product) => product._id);
+      return res.status(400).json({
+        message: "Brand cannot be deleted because it has associated products.",
+        productIds: productIds,
+      });
+    }
+
+    // Xóa brand
     const brand = await Brand.findByIdAndDelete(id);
 
     if (!brand) {
       return res.status(404).json({ message: "Brand not found" });
     }
+
+    // Cập nhật lại các category có chứa brand này
+    await Category.updateMany({ brands: id }, { $pull: { brands: id } });
 
     res.status(200).json({ message: "Brand deleted successfully" });
   } catch (error) {
