@@ -142,6 +142,14 @@ const deleteCartItem = async (req, res) => {
     const { id } = req.params; // ObjectId của CartItem
     const userId = req.user._id; // Lấy _id của người dùng từ middleware
 
+    // Kiểm tra xem giỏ hàng của người dùng đã tồn tại chưa
+    let cart = await Cart.findOne({ user_id: userId }).populate(
+      "items.product_id"
+    );
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
     // Kiểm tra xem sản phẩm có trong giỏ hàng không
     const cartItemIndex = cart.items.findIndex(
       (item) => item._id.toString() === id

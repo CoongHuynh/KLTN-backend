@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { sendEmail } = require("../helpers/sendEmail");
 exports.authentication = async (req, res, next) => {
   // Lấy token từ header Authorization
   const authHeader = req.headers.authorization;

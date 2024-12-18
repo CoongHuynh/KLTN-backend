@@ -15,6 +15,14 @@ const {
   resetPassword,
   updateProfile,
 } = require("../controllers/userControllers");
+const {
+  getRecommendations,
+  increaseProductScore,
+  calculateScoreIncrease,
+  getRecommenProduct,
+  getRecommenProductForUser,
+} = require("../controllers/recommendationController");
+
 const router = express.Router();
 const { authentication } = require("../middleware/authenUser");
 
@@ -32,5 +40,15 @@ router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 router.delete("/users/:id", authentication, deleteUser);
 router.put("/update-profile", authentication, updateProfile);
+
+router.get("/recommenproduct", getRecommenProduct);
+router.get("/recommenuser", authentication, getRecommenProductForUser);
+router.get("/recommendations", getRecommendations);
+router.post("/increase-score", authentication, increaseProductScore);
+router.post(
+  "/calculate-score-increase",
+  authentication,
+  calculateScoreIncrease
+);
 
 module.exports = router;

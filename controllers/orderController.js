@@ -2,6 +2,7 @@ const Order = require("../models/Order");
 const OrderItem = require("../models/OrderItem");
 const Product = require("../models/Product");
 const Payment = require("../models/Payment");
+const Cart = require("../models/Cart");
 
 const createOrder = async (req, res) => {
   try {
@@ -56,7 +57,7 @@ const createOrder = async (req, res) => {
       await newOrderItem.save();
     }
 
-    // Xóa các sản phẩm đã tạo đơn hàng khỏi giỏ hàng
+    // Xóa các sản phẩm đã mua khỏi giỏ hàng
     await Cart.updateOne(
       { user_id: user_id },
       {
@@ -104,6 +105,7 @@ const getOrdersByUserId = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 const updateOrderStatus = async (req, res) => {
   try {
     const { id } = req.params;

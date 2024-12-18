@@ -104,6 +104,7 @@ exports.useCoupon = async (req, res) => {
 
     if (coupon.usedBy.length >= coupon.quantity) {
       return res.status(400).json({ message: "Coupon has been fully used" });
+      return res.status(404).json({ message: "Coupon does not exist" });
     }
 
     coupon.usedBy.push(userId);
